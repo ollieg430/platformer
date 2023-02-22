@@ -1,3 +1,10 @@
+namespace SpriteKind {
+    export const Coin = SpriteKind.create()
+}
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Coin, function (sprite, otherSprite) {
+    info.changeScoreBy(1)
+    sprites.destroy(otherSprite)
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (Duck.vy == 0) {
         Duck.vy = -150
@@ -7,6 +14,11 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`Hell`, function (sprite, loca
     game.gameOver(false)
     game.setGameOverEffect(false, effects.splatter)
 })
+scene.onOverlapTile(SpriteKind.Player, assets.tile`Portal`, function (sprite, location) {
+    game.gameOver(true)
+    game.setGameOverEffect(true, effects.confetti)
+})
+let Coin: Sprite = null
 let Duck: Sprite = null
 scene.setBackgroundColor(8)
 Duck = sprites.create(img`
@@ -32,3 +44,8 @@ tiles.setCurrentTilemap(tilemap`level1`)
 Duck.ay = 350
 scene.cameraFollowSprite(Duck)
 Duck.setPosition(7, 61)
+for (let value of tiles.getTilesByType(assets.tile`myTile2`)) {
+    Coin = sprites.create(assets.image`Food`, SpriteKind.Coin)
+    tiles.placeOnTile(Coin, value)
+    tiles.setTileAt(value, assets.tile`transparency16`)
+}
